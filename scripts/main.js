@@ -1,3 +1,4 @@
+import { Artist } from './artist.js'
 
 /** @type {HTMLCanvasElement} */
 var canvas = document.getElementById("canvas");
@@ -6,12 +7,12 @@ var ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-const ROWS = 8;
-const COLUMNS = 8;
-const WIDTH = canvas.width / COLUMNS;
-const HEIGHT = canvas.height / ROWS;
+const WIDTH = canvas.width;
+const HEIGHT = canvas.height;
 
-var state = 'title';
+const artist = new Artist();
+
+var state = 'loading';
 //loading, title, settings, lobby, game
 var gamestate = 'unstarted';
 var loadingProgress = 0;
@@ -113,3 +114,4 @@ function drawTitleScreen() {
 // }
 
 
+export { WIDTH, HEIGHT, ctx, canvas }
