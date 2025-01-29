@@ -1,4 +1,4 @@
-import { Scene, Object, ImageObject } from './scene.js'
+import { Scene, Object, ImageObject, ButtonObject } from './scene.js'
 
 /** @type {HTMLCanvasElement} */
 let canvas = document.getElementById("canvas");
@@ -18,11 +18,24 @@ const LoadingScene = new Scene([
     }, function(elapsed) {
         this.data.loadingProgress = this.data.loadingProgress ?? 0
         this.data.loadingProgress += elapsed;
-        this.data.loadingProgress = Math.min(this.data.loadingProgress, 760)
+        if (this.data.loadingProgress >= 760) {
+            this.data.loadingProgress = 760
+            currentScene = MainScene
+        }
     }),
     new ImageObject(20, 20, "/public/img/test.png")
 ]);
 
+const MainScene = new Scene([
+    new ButtonObject(100, 100, 100, 40, function() {
+        ctx.fillStyle = "red";
+        ctx.fillRect(this.x, this.y, this.w, this.h);
+    }, function() {
+        alert("Ow")
+    })
+])
+
+// Main Code
 function initialize() {
     onresize = resize;
     resize();

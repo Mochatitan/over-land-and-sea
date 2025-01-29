@@ -32,7 +32,9 @@ class Scene {
     }
 
     handleClick(mx, my) {
-        // Add some logic here later, probably when I make a proper button class
+        for (let o of this.objects) {
+            if (o.handleClick) {o.handleClick(mx, my)}
+        }
     }
 
     addObject(object) {
@@ -68,4 +70,21 @@ class ImageObject extends Object {
     }
 }
 
-export { Scene, Object, ImageObject }
+class ButtonObject extends Object {
+    constructor(x, y, w, h, draw = EMPTY, click = EMPTY, update = EMPTY) {
+        super(x, y, draw, update)
+        this.w = w
+        this.h = h
+        this.onClick = click
+    }
+    handleClick(mx, my) {
+        if (mx > this.x && mx < this.x + this.w && my > this.y && my < this.y + this.h) {
+            this.click()
+        }
+    }
+    click() {
+        this.onClick()
+    }
+}
+
+export { Scene, Object, ImageObject, ButtonObject }
