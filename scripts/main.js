@@ -1,8 +1,10 @@
 import { Scene, Object, ImageObject, ButtonObject } from './scene.js'
+import { io } from "socket.io-client";
 
 /** @type {HTMLCanvasElement} */
 let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
+const socket = io("ws://localhost:3000");
 
 // Constants
 const EXPECTED_HEIGHT = 1040;
@@ -23,7 +25,7 @@ const LoadingScene = new Scene([
             currentScene = MainScene
         }
     }),
-    new ImageObject(20, 20, "/public/img/test.png")
+    new ImageObject(20, 20, "/img/test.png")
 ]);
 
 const MainScene = new Scene([
@@ -31,10 +33,12 @@ const MainScene = new Scene([
         ctx.fillStyle = "red";
         ctx.fillRect(this.x, this.y, this.w, this.h);
     }, function() {
-        alert("Ow")
+        socket.emit("test", "wingmill");
+        alert("Ow");
     })
 ])
 
+socket.on()
 // Main Code
 function initialize() {
     onresize = resize;
