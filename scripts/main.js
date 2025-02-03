@@ -1,117 +1,102 @@
-import { Artist } from './artist.js'
+import { Scene, Object, ImageObject, ButtonObject } from './scene.js'
+import { io } from "socket.io-client";
 
 /** @type {HTMLCanvasElement} */
-var canvas = document.getElementById("canvas");
-var ctx = canvas.getContext("2d");
+let canvas = document.getElementById("canvas");
+let ctx = canvas.getContext("2d");
+const socket = io("ws://localhost:3000");
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+// Constants
+const EXPECTED_HEIGHT = 1040;
 
-const WIDTH = canvas.width;
-const HEIGHT = canvas.height;
+// Variables
+let currentScene;
 
-const artist = new Artist();
+// Scenes
+const LoadingScene = new Scene([
+    new Object(() => [120, 780], function() {
+        const [x, y] = this.position()
+        ctx.fillStyle = "orange";
+        ctx.fillRect(x, y, this.data.loadingProgress, 120);
+    }, function(elapsed) {
+        this.data.loadingProgress = this.data.loadingProgress ?? 0 
+        this.data.loadingProgress += elapsed;
+        if (this.data.loadingProgress >= 760) {
+            this.data.loadingProgress = 760;
+            currentScene = MainScene;
+        }
+    }),
+    new ImageObject(() => [20, 20], "/img/test.png")
+]);
 
-var state = 'loading';
-//loading, title, settings, lobby, game
-var gamestate = 'unstarted';
-var loadingProgress = 0;
+const MainScene = new Scene([new Object(() => [10, 10],
+    function() {
+        const [x, y] = this.position()
+        ctx.fillStyle = "yellow";
+        ctx.fillRect(x, y, canvas.width, canvas.height);
+    }, 
+    function(){}
+),
+    new ButtonObject(() => [10, 10], () => [300, canvas.height/2], function() {
+        const [x, y] = this.position()
+        const [w, h] = this.dimensions()
+        ctx.fillStyle = "red";
+        ctx.fillRect(x, y, w, h);
+    }, function() {
+        socket.emit("test", "if you can read this, the test worked  ");
+        alert("emitting test...");
+    })]);
 
-const image = new Image();
-var loaded = false;
-image.src = '/img/screens/loadingscreen.png';
-image.onload = () => {
-  ctx.drawImage(image, 0, 0, canvas.width, canvas.height); // Adjust the dimensions as needed
-  loaded = true;
-};
-image.onerror = () => {
-  console.error('Failed to load the image.');
-};
+socket.on('test-two', (msg) => {
+    console.log("SECOND TEST: " + msg);
+});
 
+function getCanvas(){
+    return canvas;
+}
 
+// Main Code
+function initialize() {
+    onresize = resize;
+    resize();
+    currentScene = LoadingScene;
 
-function update(progress) {
-  // Update the state of the world for the elapsed time since last render
-  if (loadingProgress < 760) {
-    loadingProgress += 1;
-  } else {
-    state = 'title';
-  }
+    requestAnimationFrame(loop);
+}
+
+function update(elapsed) {
+    currentScene?.update(elapsed);
 }
 
 function draw() {
-  if (state == 'loading') {
-    drawLoadingScreen();
-  }
-  if (state == 'title') {
-    drawTitleScreen();
-  }
-
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    currentScene?.draw();
 }
 
-function loop(timestamp) {
-  var progress = timestamp - lastRender;
+let lastRender = 0;
+function loop(dt) {
+    const elapsed = dt - lastRender;
 
-  update(progress);
-  draw();
+    update(elapsed);
+    draw();
 
-  lastRender = timestamp;
-  window.requestAnimationFrame(loop);
+    lastRender = dt;
+    requestAnimationFrame(loop);
 }
 
-var lastRender = 0;
-window.requestAnimationFrame(loop);
+canvas.addEventListener("click", function(e) {
+    const scale = EXPECTED_HEIGHT / innerHeight;
+    const [mx, my] = [e.clientX * scale, e.clientY * scale];
 
-
-canvas.addEventListener("mousedown", async function (e) {
-  const rect = canvas.getBoundingClientRect();
-  let mouseX = e.clientX - rect.x;
-  let mouseY = e.clientY - rect.y;
-
-
-
-  if (mouseX >= 400 && mouseX <= 600 && mouseY >= 540 && mouseY <= 610) {
-    console.log("button clicked");
-  }
-
-  console.log(mouseX);
-  console.log(mouseY);
+    currentScene?.handleClick(mx, my);
 });
 
-
-function drawLoadingScreen() {
-  if (loaded) {
-    //ctx.drawImage(image, 0, 0, canvas.width, canvas.height); // Adjust the dimensions as needed
-    ctx.fillStyle = "orange";
-    ctx.fillRect(120, 780, loadingProgress, 120);
-  }
-}
-function drawTitleScreen() {
-
-  ctx.fillStyle = "gray";
-  ctx.fillRect(0, 0, 1000, 1000);
-
-  ctx.fillStyle = "red";
-  ctx.fillRect(200, 140, 200, 70);
+function resize() {
+    const ar = innerWidth / innerHeight;
+    canvas.width = EXPECTED_HEIGHT * ar;
+    canvas.height = EXPECTED_HEIGHT;
 }
 
-// function drawChessboard() {
-//   // draw a checkered background
-//   ctx.fillStyle = "white";
-//   ctx.fillRect(0, 0, canvas.width, canvas.height);
+initialize();
 
-//   ctx.fillStyle = "black";
-//   for (let row = 0; row < ROWS; row++) {
-//     for (let col = 0; col < COLUMNS; col++) {
-//       // only color every other tile
-//       if ((row + col) % 2 == 1) {
-//         // draw a square tile at the current row/column position
-//         ctx.fillRect(col * WIDTH, row * HEIGHT, WIDTH, HEIGHT);
-//       }
-
-//     }
-//   }
-// }
-
-
-export { WIDTH, HEIGHT, ctx, canvas }
+export { ctx, canvas }
