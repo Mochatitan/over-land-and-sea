@@ -33,10 +33,13 @@ io.on('connection', (socket) => {
     });
 
     socket.on("test", (msg) => {
-        console.log("ZE BLUETOOTH DEVICE HAS CONNECTED SUCSESFULLY " + msg);
+        console.log("test status: " + msg);
+        io.emit("test-two", "if you can read this the test worked");
     });
+    
 });
 
+
 server.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`Server is running on http://127.0.0.1:${PORT}`);
 });

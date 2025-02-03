@@ -14,31 +14,47 @@ let currentScene;
 
 // Scenes
 const LoadingScene = new Scene([
-    new Object(120, 780, function() {
+    new Object(() => [120, 780], function() {
+        const [x, y] = this.position()
         ctx.fillStyle = "orange";
-        ctx.fillRect(this.x, this.y, this.data.loadingProgress, 120);
+        ctx.fillRect(x, y, this.data.loadingProgress, 120);
     }, function(elapsed) {
-        this.data.loadingProgress = this.data.loadingProgress ?? 0
+        this.data.loadingProgress = this.data.loadingProgress ?? 0 
         this.data.loadingProgress += elapsed;
         if (this.data.loadingProgress >= 760) {
-            this.data.loadingProgress = 760
-            currentScene = MainScene
+            this.data.loadingProgress = 760;
+            currentScene = MainScene;
         }
     }),
-    new ImageObject(20, 20, "/img/test.png")
+    new ImageObject(() => [20, 20], "/img/test.png")
 ]);
 
-const MainScene = new Scene([
-    new ButtonObject(100, 100, 100, 40, function() {
+const MainScene = new Scene([new Object(() => [10, 10],
+    function() {
+        const [x, y] = this.position()
+        ctx.fillStyle = "yellow";
+        ctx.fillRect(x, y, canvas.width, canvas.height);
+    }, 
+    function(){}
+),
+    new ButtonObject(() => [10, 10], () => [300, canvas.height/2], function() {
+        const [x, y] = this.position()
+        const [w, h] = this.dimensions()
         ctx.fillStyle = "red";
-        ctx.fillRect(this.x, this.y, this.w, this.h);
+        ctx.fillRect(x, y, w, h);
     }, function() {
-        socket.emit("test", "wingmill");
-        alert("Ow");
-    })
-])
+        socket.emit("test", "if you can read this, the test worked  ");
+        alert("emitting test...");
+    })]);
 
-socket.on()
+socket.on('test-two', (msg) => {
+    console.log("SECOND TEST: " + msg);
+});
+
+function getCanvas(){
+    return canvas;
+}
+
 // Main Code
 function initialize() {
     onresize = resize;

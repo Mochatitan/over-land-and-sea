@@ -43,9 +43,8 @@ class Scene {
 }
 
 class Object {
-    constructor(x, y, draw = EMPTY, update = EMPTY) {
-        this.x = x;
-        this.y = y;
+    constructor(pos, draw = EMPTY, update = EMPTY) {
+        this.position = pos
         this.onDraw = draw;
         this.onUpdate = update;
         this.data = {};
@@ -58,12 +57,14 @@ class Object {
     update(elapsed) {
         this.onUpdate(elapsed);
     }
+
 }
 
 class ImageObject extends Object {
-    constructor(x, y, path, update = EMPTY) {
-        super(x, y, function() {
-            ctx.drawImage(this.image, this.x, this.y);
+    constructor(pos, path, update = EMPTY) {
+        super(pos, function() {
+            const [x, y] = this.position()
+            ctx.drawImage(this.image, x, y);
         }, update)
         this.image = new Image();
         this.image.src = path;
@@ -71,14 +72,15 @@ class ImageObject extends Object {
 }
 
 class ButtonObject extends Object {
-    constructor(x, y, w, h, draw = EMPTY, click = EMPTY, update = EMPTY) {
-        super(x, y, draw, update)
-        this.w = w
-        this.h = h
+    constructor(pos, dimensions, draw = EMPTY, click = EMPTY, update = EMPTY) {
+        super(pos, draw, update)
+        this.dimensions = dimensions
         this.onClick = click
     }
     handleClick(mx, my) {
-        if (mx > this.x && mx < this.x + this.w && my > this.y && my < this.y + this.h) {
+        const [x, y] = this.position()
+        const [w, h] = this.dimensions()
+        if (mx > x && mx < x + w && my > y && my < y + h) {
             this.click()
         }
     }
