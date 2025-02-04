@@ -3,10 +3,16 @@
     padding: 0;
 }
 
-html, body {
+html,
+body {
     overflow: hidden;
 }
 
 canvas {
     width: 100dvw;
+}
+
+@font-face {
+    font-family: 'Candela';
+    src: url('public/fonts/Candela/CandelaBook.otf') format('truetype');
 }

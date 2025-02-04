@@ -1,4 +1,4 @@
-import { Scene, Object, ImageObject, ButtonObject } from "../scene";
+import { Scene, Object, ImageObject, ButtonObject, TextObject } from "../scene";
 import { ctx, canvas } from '../main.js';
 import { MultiplayerLobbiesScene } from "./multiplayerlobbies.js";
 import { SceneManager } from "../main.js";
@@ -18,4 +18,6 @@ new ButtonObject(() => [(canvas.width / 2) - 150, canvas.height / 2], () => [300
     ctx.fillRect(x, y, w, h);
 }, function () {
     SceneManager.currentScene = MultiplayerLobbiesScene;
-})]);
+}),
+new TextObject("SIGmA", () => [(100), (100)], () => [100, 100]),
+]);

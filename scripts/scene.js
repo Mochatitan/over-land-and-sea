@@ -1,6 +1,6 @@
 import { ctx, canvas } from './main.js';
 
-const EMPTY = function() {};
+const EMPTY = function () { };
 
 class Scene {
     constructor(objects = [], settings = {}, draw = EMPTY, update = EMPTY) {
@@ -23,7 +23,7 @@ class Scene {
             o.draw();
         }
     }
-    
+
     update(elapsed) {
         this.onUpdate(elapsed);
         for (let o of this.objects) {
@@ -33,7 +33,7 @@ class Scene {
 
     handleClick(mx, my) {
         for (let o of this.objects) {
-            if (o.handleClick) {o.handleClick(mx, my)}
+            if (o.handleClick) { o.handleClick(mx, my) }
         }
     }
 
@@ -62,7 +62,7 @@ class Object {
 
 class ImageObject extends Object {
     constructor(pos, path, update = EMPTY) {
-        super(pos, function() {
+        super(pos, function () {
             const [x, y] = this.position()
             ctx.drawImage(this.image, x, y);
         }, update)
@@ -87,6 +87,22 @@ class ButtonObject extends Object {
     click() {
         this.onClick()
     }
+
+
 }
 
-export { Scene, Object, ImageObject, ButtonObject }
+class TextObject extends Object {
+    constructor(text, pos, dimensions, draw = EMPTY, update = EMPTY) {
+        super(pos, draw, update);
+    }
+
+    draw() {
+        ctx.font = "80px Candela";
+        ctx.fillText("Hello, Candela!", this.position.x, this.position.y);
+    }
+    update(elapsed) {
+        this.onUpdate(elapsed);
+    }
+}
+
+export { Scene, Object, ImageObject, ButtonObject, TextObject }
