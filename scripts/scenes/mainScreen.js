@@ -11,7 +11,7 @@ export const MainScene = new Scene([new Object(() => [10, 10],
     },
     function () { }
 ),
-new ButtonObject(() => [canvas.width / 2, canvas.height / 2], () => [300, 100], function () {
+new ButtonObject(() => [(canvas.width / 2) - 150, canvas.height / 2], () => [300, 100], function () {
     const [x, y] = this.position()
     const [w, h] = this.dimensions()
     ctx.fillStyle = "red";
