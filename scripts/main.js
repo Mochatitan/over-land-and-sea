@@ -1,5 +1,4 @@
 import { Scene, Object, ImageObject, ButtonObject } from './scene.js'
-import { io } from "socket.io-client";
 import { MultiplayerLobbiesScene } from './scenes/multiplayerlobbies.js';
 import { MainScene } from './scenes/mainScreen.js';
 import { LoadingScene } from './scenes/loadingScreen.js';
@@ -7,7 +6,6 @@ import { LoadingScene } from './scenes/loadingScreen.js';
 /** @type {HTMLCanvasElement} */
 let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
-const socket = io("ws://localhost:3000");
 
 // Constants
 const EXPECTED_HEIGHT = 1040;
@@ -17,9 +15,7 @@ const SceneManager = {
     currentScene: null
 }
 
-socket.on('test-two', (msg) => {
-    console.log("SECOND TEST: " + msg);
-});
+
 
 
 // Main Code
