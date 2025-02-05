@@ -14,5 +14,5 @@ canvas {
 
 @font-face {
     font-family: 'Candela';
-    src: url('public/fonts/Candela/CandelaBook.otf') format('truetype');
+    src: url('fonts/Candela/CandelaBook.otf') format('truetype');
 }

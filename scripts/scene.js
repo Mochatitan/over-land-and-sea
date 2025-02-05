@@ -98,7 +98,8 @@ class TextObject extends Object {
 
     draw() {
         ctx.font = "80px Candela";
-        ctx.fillText("Hello, Candela!", this.position.x, this.position.y);
+        const [x, y] = this.position();
+        ctx.fillText("Hello, Candela!", x, y);
     }
     update(elapsed) {
         this.onUpdate(elapsed);
