@@ -1,5 +1,6 @@
 const express = require('express');
 const http = require('http');
+const { Socket } = require('socket.io-client');
 //const { Server } = require('socket.io');
 // const cors = require('cors');
 
@@ -15,6 +16,19 @@ const io = require("socket.io")(server, {
 });
 
 const PORT = 3000;
+
+class Lobby {
+
+    constructor(code, password) {
+        this.code = code;
+        this.password = password;
+    }
+}
+
+const lobbies = [];
+lobbies.push(new Lobby("JKLM", "1234"));
+console.log("lobbies: " + lobbies.length);
+
 
 app.get('/', (req, res) => {
     res.send('Server is running');
@@ -32,12 +46,29 @@ io.on('connection', (socket) => {
         console.log('User disconnected:', socket.id);
     });
 
-    socket.on("test", (msg) => {
-        console.log("test status: " + msg);
-        io.emit("test-two", "if you can read this the test worked");
+    // socket.on("test", (msg) => {
+    //     console.log("test status: " + msg);
+    //     io.emit("test-two", "if you can read this the test worked");
+    // });
+
+    socket.on("join-lobby", (code) => {
+        console.log("player " + socket.id + " attempt to log onto lobby " + code + ".");
+        lobbies.forEach((lobby) => {
+            if (code == lobby.code) {
+                console.log("lobby code match.");
+            } else {
+                console.log("lobby code mismatch.");
+                console.log(code + " " + lobby.code);
+            }
+        });
+
+        //io.emit("test-two", "if you can read this the test worked");
     });
-    
+
 });
+
+
+
 
 
 server.listen(PORT, () => {

@@ -1,0 +1,2 @@
+set PATH=c:\Users\rossilt\Desktop\nod\nodev20;%PATH%
+$env:PATH="C:\Users\rossilt\Desktop\nod\nodev20;" + $env:PATH

@@ -40,8 +40,9 @@ new ButtonObject(() => [10, 10], () => [300, canvas.height / 2], function () {
     ctx.fillStyle = "red";
     ctx.fillRect(x, y, w, h);
 }, function () {
-    typingCode = true;
-    console.log(typingCode);
+    // typingCode = true;
+    // console.log(typingCode);
+    socket.emit("join-lobby", "JKLM");
     //socket.emit("test", "if you can read this, the test worked  ");
 }),
 new TextObject(() => inputText, () => [(100), (800)], () => [100, 100]),
