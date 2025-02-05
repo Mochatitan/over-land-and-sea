@@ -22,7 +22,7 @@ const SceneManager = {
 function initialize() {
     onresize = resize;
     resize();
-    SceneManager.currentScene = LoadingScene;
+    SceneManager.currentScene = MultiplayerLobbiesScene;
 
     requestAnimationFrame(loop);
 }

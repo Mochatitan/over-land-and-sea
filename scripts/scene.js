@@ -93,13 +93,17 @@ class ButtonObject extends Object {
 
 class TextObject extends Object {
     constructor(text, pos, dimensions, draw = EMPTY, update = EMPTY) {
+
         super(pos, draw, update);
+        this.text = text;
     }
 
     draw() {
         ctx.font = "80px Candela";
         const [x, y] = this.position();
-        ctx.fillText("Hello, Candela!", x, y);
+        let text = this.text
+        if (typeof text == "function") { text = text(); }
+        ctx.fillText(text, x, y);
     }
     update(elapsed) {
         this.onUpdate(elapsed);
