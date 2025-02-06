@@ -105,9 +105,16 @@ class InputObject extends Object {
 
     constructor(pos, dimensions, text, allowSpaces, update = EMPTY) {
         super(pos, function () {
+
+
             ctx.font = "80px Candela";
             ctx.textBaseline = "hanging"
             const [x, y] = this.position();
+            const [w, h] = this.dimensions()
+            ctx.textAlign = "left";
+            ctx.fillStyle = "gray";
+            ctx.fillRect(x - 15, y - 5, w + 30, h + 10);
+            ctx.fillStyle = "red";
             ctx.fillText(this.text, x, y);
         }, update)
         this.dimensions = dimensions;
