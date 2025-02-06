@@ -87,27 +87,61 @@ class ButtonObject extends Object {
     click() {
         this.onClick()
     }
-
-
 }
 
 class TextObject extends Object {
-    constructor(text, pos, dimensions, draw = EMPTY, update = EMPTY) {
-
-        super(pos, draw, update);
+    constructor(text, pos, dimensions, update = EMPTY) {
+        super(pos, function() {
+            ctx.font = "80px Candela";
+            const [x, y] = this.position();
+            ctx.fillText(this.text, x, y);
+        }, update);
         this.text = text;
-    }
-
-    draw() {
-        ctx.font = "80px Candela";
-        const [x, y] = this.position();
-        let text = this.text
-        if (typeof text == "function") { text = text(); }
-        ctx.fillText(text, x, y);
-    }
-    update(elapsed) {
-        this.onUpdate(elapsed);
     }
 }
 
-export { Scene, Object, ImageObject, ButtonObject, TextObject }
+class InputObject extends Object {
+    #inputElement;
+
+    constructor(pos, dimensions, text, update = EMPTY) {
+        super(pos, function() {
+            ctx.font = "80px Candela";
+            ctx.textBaseline = "hanging"
+            const [x, y] = this.position();
+            ctx.fillText(this.text, x, y);
+        }, update)
+        this.dimensions = dimensions;
+        this.text = text;
+        this.selected = false;
+    }
+    handleClick(mx, my) {
+        const [x, y] = this.position();
+        const [w, h] = this.dimensions();
+        if (mx > x && mx < x + w && my > y && my < y + h) {
+            this.selected = true;
+            if (!this.#inputElement) {
+                this.#inputElement = document.createElement("input");
+                this.#inputElement.style = `opacity: 0;
+                    left: ${x * (innerWidth / canvas.width)}px;
+                    top: ${y * (innerHeight / canvas.height)}px;
+                    width: ${w * (innerWidth / canvas.width)}px;
+                    height: ${h * (innerHeight / canvas.height)}px;`;
+                this.#inputElement.value = this.text;
+                const input = (e) => {
+                    this.text = e.target.value;
+                }
+                this.#inputElement.oninput = input;
+                this.#inputElement.onkeydown = input;
+                this.#inputElement.onblur = (e) => {
+                    this.selected = false;
+                    this.#inputElement.remove();
+                    this.#inputElement = null;
+                }
+                document.body.append(this.#inputElement);
+                this.#inputElement.focus();
+            }
+        }
+    }
+}
+
+export { Scene, Object, ImageObject, ButtonObject, TextObject, InputObject }

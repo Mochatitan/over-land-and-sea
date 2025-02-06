@@ -47,7 +47,7 @@ function loop(dt) {
     requestAnimationFrame(loop);
 }
 
-canvas.addEventListener("click", function (e) {
+canvas.addEventListener("click", function(e) {
     const scale = EXPECTED_HEIGHT / innerHeight;
     const [mx, my] = [e.clientX * scale, e.clientY * scale];
 
@@ -58,7 +58,6 @@ function resize() {
     const ar = innerWidth / innerHeight;
     canvas.width = EXPECTED_HEIGHT * ar;
     canvas.height = EXPECTED_HEIGHT;
-    console.log(SceneManager.currentScene);
 }
 
 initialize();
