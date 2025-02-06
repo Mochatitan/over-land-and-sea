@@ -32,6 +32,7 @@ new ButtonObject(() => [350, 10], () => [300, canvas.height / 2], function () {
     ctx.fillRect(x, y, w, h);
 }, function () {
     //socket.emit("test", "if you can read this, the test worked  ");
+    console.log(this.parentScene.objects[2].text)
 }),
 
 ]);

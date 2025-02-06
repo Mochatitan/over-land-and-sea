@@ -91,7 +91,7 @@ class ButtonObject extends Object {
 
 class TextObject extends Object {
     constructor(text, pos, dimensions, update = EMPTY) {
-        super(pos, function() {
+        super(pos, function () {
             ctx.font = "80px Candela";
             const [x, y] = this.position();
             ctx.fillText(this.text, x, y);
@@ -103,8 +103,8 @@ class TextObject extends Object {
 class InputObject extends Object {
     #inputElement;
 
-    constructor(pos, dimensions, text, update = EMPTY) {
-        super(pos, function() {
+    constructor(pos, dimensions, text, allowSpaces, update = EMPTY) {
+        super(pos, function () {
             ctx.font = "80px Candela";
             ctx.textBaseline = "hanging"
             const [x, y] = this.position();
@@ -128,6 +128,7 @@ class InputObject extends Object {
                     height: ${h * (innerHeight / canvas.height)}px;`;
                 this.#inputElement.value = this.text;
                 const input = (e) => {
+                    e.target.value = e.target.value.slice(0, 4);
                     this.text = e.target.value;
                 }
                 this.#inputElement.oninput = input;
@@ -141,6 +142,10 @@ class InputObject extends Object {
                 this.#inputElement.focus();
             }
         }
+
+    }
+    getInput() {
+        return this.text;
     }
 }
 
