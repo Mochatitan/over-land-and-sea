@@ -24,11 +24,29 @@ class Lobby {
         this.password = password;
     }
 }
+class Player {
 
+    constructor(name, id) {
+        this.id = id;
+        this.name = name;
+    }
+}
+
+const players = [];
 const lobbies = [];
 lobbies.push(new Lobby("JKLM", "1234"));
 console.log("lobbies: " + lobbies.length);
 
+function getPlayerIndexByID(id) {
+    players.forEach((player) => {
+        if (player.id == id) {
+            console.log("player matched ID " + id);
+            return player;
+        } else {
+            console.log("Player ID mismatch");
+        }
+    });
+}
 
 app.get('/', (req, res) => {
     res.send('Server is running');
@@ -36,7 +54,7 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
     console.log('A user connected:', socket.id);
-
+    players.push(new Player("Mocha", socket.id));
     // // Broadcast a message to all connected clients
     // socket.on('playerMove', (data) => {
     //     socket.broadcast.emit('playerMove', data);
@@ -44,6 +62,7 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         console.log('User disconnected:', socket.id);
+        players.splice(getPlayerIndexByID(socket.id), 1);
     });
 
     // socket.on("test", (msg) => {
