@@ -4,6 +4,8 @@ import { io } from "socket.io-client";
 
 const socket = io("ws://localhost:3000");
 
+const codebox = new InputObject(() => [((canvas.width / 2) - 150) - 110, (325)], () => [150, 100], "g");
+
 export const MultiplayerLobbiesScene = new Scene([new Object(() => [10, 10],
     function () {
         const [x, y] = this.position()
@@ -25,11 +27,11 @@ new ButtonObject(() => [((canvas.width / 2) - 150) + 110, 300], () => [300, 150]
 }, function () {
     // typingCode = true;
     // console.log(typingCode);
-    socket.emit("join-lobby", "JKLM");
+    socket.emit("join-lobby", codebox.getInput());
     //socket.emit("test", "if you can read this, the test worked  ");
 }),
 
-new InputObject(() => [((canvas.width / 2) - 150) - 110, (325)], () => [150, 100], "g"),
+    codebox,
 
 new ButtonObject(() => [((canvas.width / 2) - 200), 500], () => [400, 150], function () {
     const [x, y] = this.position()
