@@ -19,6 +19,7 @@ const PORT = 3000;
 
 class Lobby {
 
+    players = [];
     constructor(code, password) {
         this.code = code;
         this.password = password;
@@ -75,6 +76,8 @@ io.on('connection', (socket) => {
         lobbies.forEach((lobby) => {
             if (code == lobby.code) {
                 console.log("lobby code match.");
+                lobby.players.push(socket.id);
+                console.log(lobby.players);
             } else {
                 console.log("lobby code mismatch.");
                 console.log(code + " " + lobby.code);
