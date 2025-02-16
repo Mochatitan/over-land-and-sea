@@ -24,9 +24,16 @@ class Lobby {
         this.code = code;
         this.password = password;
     }
+
+    printPlayers() {
+        players.forEach((player) => {
+            console.log(player.name);
+        });
+    }
 }
 class Player {
-
+    lobby = "none";
+    name = "delta 1-1";
     constructor(name, id) {
         this.id = id;
         this.name = name;
@@ -55,7 +62,7 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
     console.log('A user connected:', socket.id);
-    players.push(new Player("Mocha", socket.id));
+    players.push(new Player("jonathon", socket.id));
     // // Broadcast a message to all connected clients
     // socket.on('playerMove', (data) => {
     //     socket.broadcast.emit('playerMove', data);
@@ -72,12 +79,14 @@ io.on('connection', (socket) => {
     // });
 
     socket.on("join-lobby", (code) => {
-        console.log("player " + socket.id + " attempt to log onto lobby " + code + ".");
+        var playerJoining = players[0];
+        console.log("player " + playerJoining.name + " attempt to log onto lobby " + code + ".");
         lobbies.forEach((lobby) => {
             if (code == lobby.code) {
                 console.log("lobby code match.");
-                lobby.players.push(socket.id);
-                console.log(lobby.players);
+                lobby.players.push(playerJoining);
+                playerJoining.lobby = lobby.code;
+                lobby.printPlayers();
             } else {
                 console.log("lobby code mismatch.");
                 console.log(code + " " + lobby.code);
