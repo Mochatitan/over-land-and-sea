@@ -42,6 +42,10 @@ class Player {
         this.id = id;
         this.name = name;
     }
+
+    setName(newName) {
+        this.name = newName;
+    }
 }
 
 const players = [];
@@ -66,7 +70,7 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
     console.log('A user connected:', socket.id);
-    players.push(new Player("jonathon", socket.id));
+    players.push(new Player("unnamed", socket.id));
     // // Broadcast a message to all connected clients
     // socket.on('playerMove', (data) => {
     //     socket.broadcast.emit('playerMove', data);
@@ -82,8 +86,9 @@ io.on('connection', (socket) => {
     //     io.emit("test-two", "if you can read this the test worked");
     // });
 
-    socket.on("join-lobby", (code) => {
+    socket.on("join-lobby", (code, name) => {
         var playerJoining = players[0];
+        players[0].setName(name);
         console.log("player " + playerJoining.name + " attempt to log onto lobby " + code + ".");
         lobbies.forEach((lobby) => {
             if (code == lobby.code) {

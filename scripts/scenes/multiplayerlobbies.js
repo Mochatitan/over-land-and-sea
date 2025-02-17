@@ -6,8 +6,8 @@ import { LobbyScene } from "./lobbyScene.js";
 
 const socket = io("ws://localhost:3000");
 
-const codebox = new InputObject(() => [((canvas.width / 2) - 150) - 110, (325)], () => [150, 100], "g");
-
+const codebox = new InputObject(() => [((canvas.width / 2) - 150) - 110, (325)], () => [150, 100], "g", false, 4);
+const namebox = new InputObject(() => [((canvas.width / 2) - 150) - 200, (125)], () => [690, 100], "John", true, 15);
 export const MultiplayerLobbiesScene = new Scene([new Object(() => [10, 10],
     function () {
         const [x, y] = this.position()
@@ -29,11 +29,11 @@ new ButtonObject(() => [((canvas.width / 2) - 150) + 110, 300], () => [300, 150]
 }, function () {
     // typingCode = true;
     // console.log(typingCode);
-    socket.emit("join-lobby", codebox.getInput());
+    socket.emit("join-lobby", codebox.getInput(), namebox.getInput());
     //socket.emit("test", "if you can read this, the test worked  ");
 }),
 
-    codebox,
+    codebox, namebox,
 
 new ButtonObject(() => [((canvas.width / 2) - 200), 500], () => [400, 150], function () {
     const [x, y] = this.position()

@@ -103,7 +103,7 @@ class TextObject extends Object {
 class InputObject extends Object {
     #inputElement;
 
-    constructor(pos, dimensions, text, allowSpaces, update = EMPTY) {
+    constructor(pos, dimensions, text, allowSpaces, maxDigits, update = EMPTY) {
         super(pos, function () {
 
 
@@ -117,6 +117,8 @@ class InputObject extends Object {
             ctx.fillStyle = "red";
             ctx.fillText(this.text, x, y);
         }, update)
+        this.maxDigits = maxDigits;
+        this.allowSpaces = allowSpaces;
         this.dimensions = dimensions;
         this.text = text;
         this.selected = false;
@@ -135,8 +137,12 @@ class InputObject extends Object {
                     height: ${h * (innerHeight / canvas.height)}px;`;
                 this.#inputElement.value = this.text;
                 const input = (e) => {
-                    e.target.value = e.target.value.slice(0, 4);
-                    this.text = e.target.value;
+                    let value = e.target.value.slice(0, this.maxDigits);
+                    if (!this.allowSpaces) {
+                        value = value.replace(/\s/g, ""); // Remove spaces
+                    }
+                    e.target.value = value;
+                    this.text = value;
                 }
                 this.#inputElement.oninput = input;
                 this.#inputElement.onkeydown = input;
