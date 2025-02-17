@@ -1,6 +1,8 @@
 import { Scene, Object, ImageObject, ButtonObject, TextObject, InputObject } from "../scene";
 import { ctx, canvas } from '../main.js';
 import { io } from "socket.io-client";
+import { SceneManager } from "../main.js";
+import { LobbyScene } from "./lobbyScene.js";
 
 const socket = io("ws://localhost:3000");
 
@@ -45,10 +47,10 @@ new ButtonObject(() => [((canvas.width / 2) - 200), 500], () => [400, 150], func
 
 ]);
 
-
 socket.on("suckies-join", (lobby) => {
     console.log("im joining the lobby! can you say lobby in spanish?");
     console.log(lobby.code);
+    SceneManager.currentScene = LobbyScene;
 })
 // socket.on('test-two', (msg) => {
 //     console.log("SECOND TEST: " + msg);

@@ -1,12 +1,12 @@
-import { Scene, Object, ImageObject, ButtonObject, TextObject } from "../scene";
+import { Scene, Object, ImageObject, ButtonObject, TextObject } from "../scene.js";
 import { ctx, canvas } from '../main.js';
 import { MultiplayerLobbiesScene } from "./multiplayerlobbies.js";
 import { SceneManager } from "../main.js";
 
-export const MainScene = new Scene([new Object(() => [10, 10],
+export const LobbyScene = new Scene([new Object(() => [10, 10],
     function () {
         const [x, y] = this.position()
-        ctx.fillStyle = "yellow";
+        ctx.fillStyle = "blue";
         ctx.fillRect(x, y, canvas.width, canvas.height);
     },
     function () { }
