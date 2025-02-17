@@ -30,6 +30,10 @@ class Lobby {
             console.log(player.name);
         });
     }
+
+    emit(io, signal, variable) {
+        io.to(this.code).emit(signal, variable);
+    }
 }
 class Player {
     lobby = "none";
@@ -86,7 +90,10 @@ io.on('connection', (socket) => {
                 console.log("lobby code match.");
                 lobby.players.push(playerJoining);
                 playerJoining.lobby = lobby.code;
+                socket.join(lobby.code);
                 lobby.printPlayers();
+                //io.to("JKLM").emit("test-room", "skib");
+                lobby.emit(io, "test-room", "skib");
                 io.emit("suckies-join", lobby);
             } else {
                 console.log("lobby code mismatch.");
