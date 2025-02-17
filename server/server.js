@@ -87,6 +87,7 @@ io.on('connection', (socket) => {
                 lobby.players.push(playerJoining);
                 playerJoining.lobby = lobby.code;
                 lobby.printPlayers();
+                io.emit("suckies-join", lobby);
             } else {
                 console.log("lobby code mismatch.");
                 console.log(code + " " + lobby.code);

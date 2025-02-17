@@ -45,6 +45,11 @@ new ButtonObject(() => [((canvas.width / 2) - 200), 500], () => [400, 150], func
 
 ]);
 
+
+socket.on("suckies-join", (lobby) => {
+    console.log("im joining the lobby! can you say lobby in spanish?");
+    console.log(lobby.code);
+})
 // socket.on('test-two', (msg) => {
 //     console.log("SECOND TEST: " + msg);
 // });
