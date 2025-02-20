@@ -38,7 +38,10 @@ class Lobby {
 class Player {
     lobby = "none";
     name = "delta 1-1";
+    index = 192;
     constructor(name, id) {
+        console.log("lengt: " + players.length);
+        this.index = players.length;
         this.id = id;
         this.name = name;
     }
@@ -57,7 +60,8 @@ function getPlayerIndexByID(id) {
     players.forEach((player) => {
         if (player.id == id) {
             console.log("player matched ID " + id);
-            return player;
+            console.log("indicks: " + player.index);
+            return player.index;
         } else {
             console.log("Player ID mismatch");
         }
@@ -70,7 +74,6 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
     console.log('A user connected:', socket.id);
-    players.push(new Player("unnamed", socket.id));
     // // Broadcast a message to all connected clients
     // socket.on('playerMove', (data) => {
     //     socket.broadcast.emit('playerMove', data);
@@ -87,8 +90,12 @@ io.on('connection', (socket) => {
     // });
 
     socket.on("join-lobby", (code, name) => {
-        var playerJoining = players[0];
-        players[0].setName(name);
+        players.push(new Player(name, socket.id));
+        let index = getPlayerIndexByID(socket.id);
+        console.log(index);
+        var playerJoining = players[index];
+        playerJoining.setName(name);
+
         console.log("player " + playerJoining.name + " attempt to log onto lobby " + code + ".");
         lobbies.forEach((lobby) => {
             if (code == lobby.code) {
