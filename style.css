@@ -10,9 +10,16 @@ body {
 
 canvas {
     width: 100dvw;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+input {
+    position: absolute;
 }
 
 @font-face {
     font-family: 'Candela';
-    src: url('public/fonts/Candela/CandelaBook.otf') format('truetype');
+    src: url('fonts/Candela/CandelaBook.otf') format('truetype');
 }
