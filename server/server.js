@@ -45,10 +45,6 @@ class Player {
         this.id = id;
         this.name = name;
     }
-
-    setName(newName) {
-        this.name = newName;
-    }
 }
 
 const players = [];
@@ -57,17 +53,17 @@ lobbies.push(new Lobby("JKLM", "1234"));
 console.log("lobbies: " + lobbies.length);
 
 function getPlayerIndexByID(id) {
-    players.forEach((player) => {
+    for (let player of players) {
         if (player.id == id) {
             console.log("player matched ID " + id);
             console.log("indicks: " + player.index);
-            return player.index;
+            return player.index; // ✅ This exits the function properly
         } else {
             console.log("Player ID mismatch");
         }
-    });
+    }
+    return -1; // Or another default value if player not found
 }
-
 app.get('/', (req, res) => {
     res.send('Server is running');
 });
@@ -92,9 +88,8 @@ io.on('connection', (socket) => {
     socket.on("join-lobby", (code, name) => {
         players.push(new Player(name, socket.id));
         let index = getPlayerIndexByID(socket.id);
-        console.log(index);
+        console.log("index: " + index);
         var playerJoining = players[index];
-        playerJoining.setName(name);
 
         console.log("player " + playerJoining.name + " attempt to log onto lobby " + code + ".");
         lobbies.forEach((lobby) => {
@@ -106,7 +101,11 @@ io.on('connection', (socket) => {
                 lobby.printPlayers();
                 //io.to("JKLM").emit("test-room", "skib");
                 lobby.emit(io, "test-room", "skib");
-                io.emit("suckies-join", lobby);
+                io.emit("suckies-join", {
+                    code: lobby.code,
+                    password: lobby.password,
+                    players: lobby.players.map(player => ({ name: player.name, id: player.id, index: player.index })) // Send as plain objects,
+                });
             } else {
                 console.log("lobby code mismatch.");
                 console.log(code + " " + lobby.code);
