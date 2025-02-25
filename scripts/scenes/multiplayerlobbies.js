@@ -8,7 +8,9 @@ import {
     Player
 
 } from "../Player.js";
-const socket = io("ws://localhost:3000");
+
+
+export const socket = io("ws://localhost:3000");
 
 const codebox = new InputObject(() => [((canvas.width / 2) - 150) - 110, (325)], () => [150, 100], "g", false, 4);
 const namebox = new InputObject(() => [((canvas.width / 2) - 150) - 200, (125)], () => [690, 100], "John", true, 15);
@@ -54,12 +56,13 @@ new ButtonObject(() => [((canvas.width / 2) - 200), 500], () => [400, 150], func
 socket.on("suckies-join", (lobbyData) => {
     console.log("im joining the lobby! can you say lobby in spanish?");
     console.log(lobbyData.code);
-    //SceneManager.currentScene = LobbyScene;
+
     let lobby = new Lobby(lobbyData.code, lobbyData.password);
     //convert player list into a player list
-    lobby.players = lobbyData.players.map(p => new Player(p.id, p.name));
-
+    lobby.players = lobbyData.players.map(p => new Player(p.name, p.id, p.index));
     lobby.printPlayers();
+
+    SceneManager.currentScene = LobbyScene;
 });
 socket.on('test-room', (msg) => {
     console.log("SECOND TEST: " + msg);

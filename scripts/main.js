@@ -2,8 +2,10 @@ import { Scene, Object, ImageObject, ButtonObject } from './scene.js'
 import { MultiplayerLobbiesScene } from './scenes/multiplayerlobbies.js';
 import { MainScene } from './scenes/mainScreen.js';
 import { LoadingScene } from './scenes/loadingScreen.js';
+import { LobbyScene } from './scenes/lobbyScene.js';
 
 /** @type {HTMLCanvasElement} */
+
 let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
 
@@ -22,7 +24,8 @@ const SceneManager = {
 function initialize() {
     onresize = resize;
     resize();
-    SceneManager.currentScene = MultiplayerLobbiesScene;
+    // SceneManager.currentScene = MultiplayerLobbiesScene;
+    SceneManager.currentScene = LobbyScene;
 
     requestAnimationFrame(loop);
 }
@@ -47,12 +50,18 @@ function loop(dt) {
     requestAnimationFrame(loop);
 }
 
-canvas.addEventListener("click", function(e) {
+canvas.addEventListener("click", function (e) {
     const scale = EXPECTED_HEIGHT / innerHeight;
     const [mx, my] = [e.clientX * scale, e.clientY * scale];
 
     SceneManager.currentScene?.handleClick(mx, my);
+
 });
+
+
+
+
+
 
 function resize() {
     const ar = innerWidth / innerHeight;
