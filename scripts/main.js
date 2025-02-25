@@ -20,6 +20,7 @@ const SceneManager = {
 
 
 
+
 // Main Code
 function initialize() {
     onresize = resize;
