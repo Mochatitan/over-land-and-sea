@@ -4,6 +4,21 @@ import { MultiplayerLobbiesScene } from "./multiplayerlobbies.js";
 import { SceneManager } from "../main.js";
 import { socket } from "./multiplayerlobbies.js";
 
+// Define grid size
+const rows = 10;
+const cols = 10;
+
+// Create an empty 2D array with default values (e.g., 0)
+let flag = new Array(rows).fill(null).map(() => new Array(cols).fill(0));
+
+// Example: Changing values
+flag[2][3] = 1; // Set row 2, column 3 to 1
+flag[4][5] = 2; // Set row 4, column 5 to 2
+
+console.log(grid);
+
+
+
 export const LobbyScene = new Scene([
     new Object(() => [10, 10],
         function () {
