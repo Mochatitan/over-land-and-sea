@@ -41,35 +41,53 @@ export const LobbyScene = new Scene([
     new TextObject("SIGmA", () => [(100), (100)], () => [100, 100]),
 ]);
 
-// Initialize drawing-related data
-LobbyScene.data.drawing = false;
-LobbyScene.data.drawnLines = [];
+// Initialize drawing-related variables
+LobbyScene.data = {
+    drawing: false,   // Tracks if the user is currently drawing
+    drawnLines: []    // Stores all drawn lines (each line is an array of points)
+};
+
+// Define the drawing area (cyan rectangle)
+let drawArea = {};
+
+// Function to check if mouse is inside the drawing area
+function isInsideDrawArea(mx, my) {
+    drawArea = {
+        x: 100,
+        y: 80,
+        width: canvas.width / 2,
+        height: canvas.height - 160
+    }
+    return mx > drawArea.x && mx < drawArea.x + drawArea.width &&
+        my > drawArea.y && my < drawArea.y + drawArea.height;
+}
 
 // Add event listeners for drawing
-// canvas.addEventListener("mousedown", function (e) {
-//     const scale = EXPECTED_HEIGHT / innerHeight;
-//     const [mx, my] = [e.clientX * scale, e.clientY * scale];
+addEventListener("mousedown", function (e) {
+    if (!canvas) return;
+    const scale = canvas.height / innerHeight; // Dynamic scaling
+    const mx = e.clientX * scale;
+    const my = e.clientY * scale;
 
-//     // Check if inside the cyan rectangle
-//     if (mx > 100 && mx < 100 + canvas.width / 2 && my > 80 && my < canvas.height - 80) {
-//         LobbyScene.data.drawing = true;
-//         LobbyScene.data.drawnLines.push([{ x: mx, y: my }]); // Start a new stroke
-//     }
-// });
+    if (isInsideDrawArea(mx, my)) {
+        LobbyScene.data.drawing = true;
+        LobbyScene.data.drawnLines.push([{ x: mx, y: my }]); // Start a new stroke
+    }
+});
 
-// canvas.addEventListener("mousemove", function (e) {
-//     if (!LobbyScene.data.drawing) return;
+addEventListener("mousemove", function (e) {
+    if (!LobbyScene.data.drawing || !canvas) return;
 
-//     const scale = EXPECTED_HEIGHT / innerHeight;
-//     const [mx, my] = [e.clientX * scale, e.clientY * scale];
+    const scale = canvas.height / innerHeight; // Dynamic scaling
+    const mx = e.clientX * scale;
+    const my = e.clientY * scale;
 
-//     // Add point to the last stroke if within bounds
-//     if (mx > 100 && mx < 100 + canvas.width / 2 && my > 80 && my < canvas.height - 80) {
-//         let currentLine = LobbyScene.data.drawnLines[LobbyScene.data.drawnLines.length - 1];
-//         currentLine.push({ x: mx, y: my });
-//     }
-// });
+    if (isInsideDrawArea(mx, my)) {
+        let currentLine = LobbyScene.data.drawnLines[LobbyScene.data.drawnLines.length - 1];
+        currentLine.push({ x: mx, y: my });
+    }
+});
 
-// canvas.addEventListener("mouseup", function () {
-//     LobbyScene.data.drawing = false;
-// });
+addEventListener("mouseup", function () {
+    LobbyScene.data.drawing = false;
+});
