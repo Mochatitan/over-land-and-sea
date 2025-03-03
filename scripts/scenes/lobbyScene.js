@@ -128,7 +128,8 @@ export const LobbyScene = new Scene([
         ctx.fillRect(x, y, w, h);
     }, function () {
         //SceneManager.currentScene = MultiplayerLobbiesScene;
-        console.log(grid[3][3]);
+        console.table(grid);
+        sendGrid(grid);
     }),
     new TextObject("SIGmA", () => [100, 100], () => [100, 100]),
 ]);
@@ -137,3 +138,8 @@ export const LobbyScene = new Scene([
 LobbyScene.data = {
     drawing: false,
 };
+
+function sendGrid(gridSending) {
+    console.log("sending array");
+    socket.emit('sendArray', gridSending);
+}

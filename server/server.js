@@ -115,7 +115,17 @@ io.on('connection', (socket) => {
         //io.emit("test-two", "if you can read this the test worked");
     });
 
+    // Handle receiving the 2D array from a client
+    socket.on('sendArray', (flaggrid) => { //yer a wizard harry
+        console.log(`Received array from ${getPlayerIndexByID(socket.id)} in room`, flaggrid);
+        console.table(flaggrid);
+        // Broadcast the array to everyone else in the room
+        // socket.to(room).emit('receiveArray', { name, array2D });
+    });
+
+
 });
+
 
 
 
